@@ -1,43 +1,48 @@
-<h1>Loja de Poções Mágicas</h1>
+@extends('layout')
+
+@section('conteudo')
+
+<h1 class="text-center mb-4">Loja Arcana de Baldur’s Gate</h1>
 
 @if(session('sucesso'))
-    <p style="color: green">{{ session('sucesso') }}</p>
+    <div class="alert alert-success">{{ session('sucesso') }}</div>
 @endif
 
-<a href="{{ route('pocoes.create') }}">Criar nova poção</a>
+<div class="text-end mb-3">
+    <a href="{{ route('pocoes.create') }}" class="btn btn-bg3">Adicionar Nova Poção</a>
+</div>
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>ID</th>
-        <th>Imagem</th>
-        <th>Nome</th>
-        <th>Nível</th>
-        <th>Preço</th>
-        <th>Ações</th>
-    </tr>
-
+<div class="row">
     @foreach ($pocoes as $pocao)
-    <tr>
-        <td>{{ $pocao->id }}</td>
-        <td>
-            @if($pocao->imagem)
-                <img src="{{ asset('storage/' . $pocao->imagem) }}" width="70">
-            @else
-                Sem imagem
-            @endif
-        </td>
-        <td>{{ $pocao->nome }}</td>
-        <td>{{ $pocao->nivel }}</td>
-        <td>{{ $pocao->preco }}</td>
-        <td>
-            <a href="{{ route('pocoes.edit', $pocao->id) }}">Editar</a> |
-            <form action="{{ route('pocoes.destroy', $pocao->id) }}" method="POST" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button>Excluir</button>
-            </form>
-        </td>
-    </tr>
-    @endforeach
+        <div class="col-md-4 mb-4">
+            <div class="item-card">
+                <div class="text-center">
+                    @if ($pocao->imagem)
+                        <img src="{{ asset('storage/' . $pocao->imagem) }}" width="130" class="item-img mb-3">
+                    @else
+                        <img src="https://i.imgur.com/Yz6zBzy.png" width="130" class="item-img mb-3">
+                    @endif
+                </div>
 
-</table>
+                <h3>{{ $pocao->nome }}</h3>
+
+                <p><strong>Nível:</strong> {{ $pocao->nivel }}</p>
+                <p><strong>Preço:</strong> {{ $pocao->preco }} ouro</p>
+
+                <p class="text-warning"><i>{{ $pocao->descricao }}</i></p>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <a href="{{ route('pocoes.edit', $pocao->id) }}" class="btn btn-bg3">Editar</a>
+
+                    <form action="{{ route('pocoes.destroy', $pocao->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+@endsection
